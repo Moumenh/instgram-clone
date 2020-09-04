@@ -1,10 +1,23 @@
-import React from 'react';
+import React,{ useState,useEffect } from 'react';
 import Post from './Post';
 
+import { db } from './firebase'
 import './App.css';
 
 
 function App() {
+
+  
+    const [posts, setPosts] = useState([])
+
+    // runs a piece of code based on a specific condition
+
+    useEffect(() => {
+      db.collection('posts').onSnapshot(snapshot => {
+        setPosts(snapshot.docs.map( doc => doc.data() ))
+      })
+    }, [posts])
+
   return (
     <div className="App">
       
@@ -15,9 +28,11 @@ function App() {
         
       </div>
       <h1>Hello sss</h1>
-      <Post/>
-      <Post/>
-      <Post/>
+
+      {posts.map( (post, id) => (
+        <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+      ))}
+
       {/* Header */}
       {/* Posts */}
     </div>
