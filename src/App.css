@@ -14,3 +14,12 @@
   object-fit: contain;
 
 }
+
+.app__signup{
+  display: flex;
+  flex-direction: column;
+}
+
+.signup__input{
+  margin-bottom: 25px;
+}
