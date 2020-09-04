@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { db, auth } from './firebase'
 import './App.css';
 import { Button, Input } from '@material-ui/core';
+import ImageUpload from './ImageUpload';
 
 
 
@@ -62,7 +63,7 @@ function App() {
     }, [user, username])
 
     useEffect(() => {     // runs a piece of code based on a specific condition
-      db.collection('posts').onSnapshot( snapshot => {
+      db.collection('posts').orderBy('timestamp', 'desc').onSnapshot( snapshot => {
         setPosts( snapshot.docs.map( doc => ({
           id: doc.id,
           post: doc.data()}) ) )
@@ -95,6 +96,9 @@ function App() {
 
   return (
     <div className="App">
+
+        
+
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -171,12 +175,10 @@ function App() {
           src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png'
           alt='logo' />
         
-      </div>
-      {user ? (
+        {user ? (
         <Button onClick={() => auth.signOut()}> LogOut</Button>
       ) : 
-      <div>
-
+      <div className='app__auth'>
         <Button onClick={() => setOpen(true)}>
           Sign Up
         </Button>
@@ -186,14 +188,20 @@ function App() {
       </div>
       }
 
+      </div>
+      
 
 
-      <h1>Hello sss</h1>
+
+      
 
       {posts.map( ({post, id}) => (
         <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
       ))}
-
+      {
+        user?.displayName && <ImageUpload username={user.displayName}/>
+      }
+      
       {/* Header */}
       {/* Posts */}
     </div>
